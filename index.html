@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        :root {
+            --primary: #1A1F2C;
+            --neon-blue: #0EA5E9;
+            --neon-pink: #D946EF;
+            --glass-bg: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background: var(--primary);
+            color: white;
+            cursor: grab;
+            overflow-x: hidden;
+        }
+
+        body:active {
+            cursor: grabbing;
+        }
+
+        .container {
+            height: 100vh;
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            position: relative;
+            padding-top: 60px;
+        }
+
+        .container::-webkit-scrollbar {
+            display: none;
+        }
+
+        section {
+            flex: none;
+            width: 100vw;
+            height: calc(100vh - 60px);
+            scroll-snap-align: start;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 2rem;
+            overflow: hidden;
+        }
+
+        /* Navbar Styles */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .menu-btn:hover {
+            color: var(--neon-blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        nav a:hover {
+            background: var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        /* Mobile Navigation */
+        @media (max-width: 768px) {
+            .menu-btn {
+                display: block;
+            }
+
+            .nav-links {
+                position: fixed;
+                top: 60px;
+                right: -100%;
+                width: 70%;
+                height: calc(100vh - 60px);
+                background: var(--glass-bg);
+                backdrop-filter: blur(10px);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.5rem;
+                transition: right 0.3s ease;
+            }
+
+            .nav-links.active {
+                right: 0;
+            }
+
+            nav a {
+                display: block;
+                text-align: center;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* Skills Section */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 1rem;
+        }
+
+        .skill-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .skill-item img {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+        }
+
+        .skill-item:hover {
+            transform: translateY(-10px);
+            background: rgba(14, 165, 233, 0.1);
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
+        }
+
+        /* Projects Section */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+            max-width: 1200px;
+            width: 100%;
+            padding: 0 1rem;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 30px rgba(14, 165, 233, 0.3);
+        }
+
+        .project-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .project-info {
+            padding: 1.5rem;
+        }
+
+        .project-info h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: white;
+            font-weight: 600;
+        }
+
+        .project-info p {
+            color: #CBD5E1;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        /* Contact Section */
+        .social-links {
+            display: flex;
+            gap: 2rem;
+            margin-top: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .social-link {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.8rem;
+            color: white;
+            text-decoration: none;
+        }
+
+        .social-link:hover {
+            background: var(--neon-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 0 20px var(--neon-blue);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .profile-image {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            display: block;
+            border: 3px solid var(--neon-blue);
+            box-shadow: 0 0 20px var(--neon-blue);
+            animation: profilePulse 4s ease-in-out infinite;
+            object-fit: cover;
+        }
+
+        @keyframes profilePulse {
+            0%, 100% { box-shadow: 0 0 20px var(--neon-blue); }
+            50% { box-shadow: 0 0 40px var(--neon-pink); }
+        }
+
+        .content {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s ease;
+        }
+
+        section.active .content {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-content">
+            <button class="menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#skills">Skills</a>
+                <a href="#projects">Projects</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <section id="home">
+            <div class="glass-card content">
+                <img src="https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/4ad8b578469635ef96a490c07cd1eb76~c5_1080x1080.jpeg?lk3s=a5d48078&nonce=52403&refresh_token=319068a3453b0bbcda5c63808ea5ddd5&x-expires=1734152400&x-signature=WOdEDm%2FQ1EpSe2zmFcj1Ed3pzmw%3D&shp=a5d48078&shcp=81f88b70" alt="Profile" class="profile-image">
+                <h1>Ridho Arrayan</h1>
+                <p>Full Stack Developer & UI/UX Designer</p>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="glass-card content">
+                <h2>About Me</h2>
+                <p>Passionate developer with 1+ years of experience in creating innovative web solutions. Specializing in React, Javascript, and modern web technologies.</p>
+                <p style="margin-top: 1rem">Based in Bandung, I combine technical expertise with creative problem solving to deliver exceptional digital experiences.</p>
+            </div>
+        </section>
+
+        <section id="skills">
+            <div class="glass-card content">
+                <h2>Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
+                        <span>HTML</span>
+                    </div>
+                    <div class="skill-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3">
+                        <span>CSS</span>
+                    </div>
+                    <div class="skill-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JavaScript">
+                        <span>JavaScript</span>
+                    </div>
+                    <div class="skill-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React">
+                        <span>React</span>
+                    </div>
+                    <div class="skill-item">
+                        <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/figma/figma-original.svg" alt="UI/UX">
+                        <span>UI/UX Design</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects">
+            <div class="glass-card content">
+                <h2 class="text-2xl font-bold mb-6 text-white">Projects</h2>
+                <div class="project-grid">
+                    <a href="https://neuraverse-by-ridho.vercel.app/" target="_blank" class="project-card">
+                        <img src="https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/4ad8b578469635ef96a490c07cd1eb76~c5_1080x1080.jpeg?lk3s=a5d48078&nonce=52403&refresh_token=319068a3453b0bbcda5c63808ea5ddd5&x-expires=1734152400&x-signature=WOdEDm%2FQ1EpSe2zmFcj1Ed3pzmw%3D&shp=a5d48078&shcp=81f88b70" alt="Project 1" class="project-image">
+                        <div class="project-info">
+                            <h3 class="text-xl font-semibold mb-2 text-white">AI Insights</h3>
+                            <p class="text-gray-300 text-sm leading-relaxed">Website tentang AI dengan tampilan dark mode; futuristic; reflection; Neon.</p>
+                        </div>
+                    </a>
+                    <a href="https://furniture-web-test.vercel.app/" target="_blank" class="project-card">
+                        <img src="https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/4ad8b578469635ef96a490c07cd1eb76~c5_1080x1080.jpeg?lk3s=a5d48078&nonce=52403&refresh_token=319068a3453b0bbcda5c63808ea5ddd5&x-expires=1734152400&x-signature=WOdEDm%2FQ1EpSe2zmFcj1Ed3pzmw%3D&shp=a5d48078&shcp=81f88b70" alt="Project 2" class="project-image">
+                        <div class="project-info">
+                            <h3 class="text-xl font-semibold mb-2 text-white">website bisnis furniture</h3>
+                            <p class="text-gray-300 text-sm leading-relaxed">website bisnis furniture</p>
+                        </div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact">
+            <div class="glass-card content">
+                <h2>Contact Me</h2>
+                <div class="social-links">
+                    <a href="https://github.com/Ridho-Arrayan" class="social-link" target="_blank">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.tiktok.com/@ridhoarrayan.26" class="social-link" target="_blank">
+                        <i class="fab fa-tiktok"></i>
+                    </a>
+                    <a href="https://whatsapp.com/channel/0029Vaoh7bqCRs1lUXir8A3x" class="social-link" target="_blank">
+                        <i class="fab fa-whatsapp"></i>
+                    </a>
+                    <a href="https://instagram.com/yourusername" class="social-link" target="_blank">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Toggle mobile menu
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            navLinks.classList.toggle('active');
+        }
+
+        // Mouse drag scrolling
+        const container = document.querySelector('.container');
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+
+        container.addEventListener('mousedown', (e) => {
+            isDown = true;
+            container.style.cursor = 'grabbing';
+            startX = e.pageX - container.offsetLeft;
+            scrollLeft = container.scrollLeft;
+        });
+
+        container.addEventListener('mouseleave', () => {
+            isDown = false;
+            container.style.cursor = 'grab';
+        });
+
+        container.addEventListener('mouseup', () => {
+            isDown = false;
+            container.style.cursor = 'grab';
+        });
+
+        container.addEventListener('mousemove', (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - container.offsetLeft;
+            const walk = (x - startX) * 2;
+            container.scrollLeft = scrollLeft - walk;
+        });
+
+        // Intersection Observer for section animations
+        const sections = document.querySelectorAll('section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                } else {
+                    entry.target.classList.remove('active');
+                }
+            });
+        }, { threshold: 0.5 });
+
+        sections.forEach(section => observer.observe(section));
+    </script>
+</body>
+</html>
